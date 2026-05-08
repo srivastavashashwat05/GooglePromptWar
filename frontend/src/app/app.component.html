@@ -1,53 +1,52 @@
 <div class="app-container">
-  <header class="glass-header">
+  <header class="glass-header" role="banner">
     <div class="logo">
-      <span class="icon">✈️</span>
+      <span class="icon" aria-hidden="true">✈️</span>
       <h1>TravelAI Engine</h1>
     </div>
-    <div class="search-section">
+    <section class="search-section" aria-label="Trip planning controls">
       <div class="input-row main-input">
         <input 
           type="text" 
           [(ngModel)]="destination" 
           placeholder="Where to next? (e.g. Tokyo, Jaipur...)"
+          aria-label="Enter destination"
           (keyup.enter)="generatePlan()"
         >
       </div>
       <div class="input-row controls">
         <div class="input-group">
-          <label>Days</label>
-          <input type="number" [(ngModel)]="numDays" min="1" max="10" style="width: 60px;">
+          <label for="days-input">Days</label>
+          <input id="days-input" type="number" [(ngModel)]="numDays" min="1" max="10" aria-label="Number of days">
         </div>
         <div class="input-group">
-          <label>Interests</label>
-          <input type="text" [(ngModel)]="interests" placeholder="Food, Art, Nature..." style="width: 250px;">
+          <label for="interests-input">Interests</label>
+          <input id="interests-input" type="text" [(ngModel)]="interests" placeholder="Food, Art..." aria-label="Travel interests">
         </div>
-        <button (click)="generatePlan()" [disabled]="loading" class="magic-btn">
+        <button (click)="generatePlan()" [disabled]="loading" class="magic-btn" [attr.aria-busy]="loading">
           <span *ngIf="!loading">✨ Plan My Trip</span>
-          <span *ngIf="loading" class="loader"></span>
+          <span *ngIf="loading" class="loader" aria-label="Loading itinerary"></span>
         </button>
       </div>
-    </div>
+    </section>
   </header>
 
   <main class="content">
-    <div class="itinerary-panel" [class.active]="itinerary">
+    <div class="itinerary-panel" [class.active]="itinerary" role="region" aria-live="polite">
       <div *ngIf="!itinerary && !loading" class="empty-state">
         <p>Your AI-powered adventure starts here.</p>
-        <small>Enter a destination above to generate a custom itinerary.</small>
       </div>
 
       <div *ngIf="loading" class="loading-state">
-        <div class="pulse-loader"></div>
-        <p>Consulting with Gemini...</p>
+        <p>Gemini is crafting your journey...</p>
       </div>
 
       <div *ngIf="itinerary" class="itinerary-content">
         <h2>{{ itinerary.destination }}</h2>
-        <div *ngFor="let day of itinerary.itinerary" class="day-card">
+        <div *ngFor="let day of itinerary.itinerary" class="day-card" tabindex="0">
           <h3>Day {{ day.day }}</h3>
           <div *ngFor="let activity of day.activities" class="activity-item">
-            <div class="activity-dot"></div>
+            <div class="activity-dot" aria-hidden="true"></div>
             <div class="activity-details">
               <strong>{{ activity.name }}</strong>
               <p>{{ activity.description }}</p>
@@ -57,8 +56,8 @@
       </div>
     </div>
 
-    <div class="map-wrapper">
-      <div #mapContainer id="map" aria-label="Interactive Travel Map"></div>
+    <div class="map-wrapper" role="application" aria-label="Interactive map showing trip locations">
+      <div #mapContainer id="map"></div>
     </div>
   </main>
 </div>
